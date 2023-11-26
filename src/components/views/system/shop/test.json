@@ -1,0 +1,16 @@
+{
+  "totalNum" : 3,
+  "totalPrice" : 300,
+  "projects" : [
+    {
+      "name": "项目1",
+      "price": 100,
+      "num": 2
+    },
+    {
+      "name": "项目2",
+      "price": 100,
+      "num": 1
+    }
+  ]
+}

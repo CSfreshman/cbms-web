@@ -1,0 +1,20 @@
+# GraduateDesignWeb
+数据库课程设计：毕业设计管理系统前端界面
+
+## Project setup
+```
+npm install
+```
+
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
+
+### Compiles and minifies for production
+```
+npm run build
+```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).
