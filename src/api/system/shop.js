@@ -1,5 +1,13 @@
 import request from '@/utils/request'
 
+export function pay(orderCode) {
+  return request({
+    url: '/shop/pay?orderCode=' + orderCode,
+    method: 'get',
+
+  })
+
+}
 
 export function updateNum(id,plusNum) {
   return request({

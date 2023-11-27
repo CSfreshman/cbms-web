@@ -124,6 +124,7 @@
 
         <el-table v-loading="loading" :data="orderList" @selection-change="handleSelectionChange" @expand-change="rowExpand">
           <el-table-column type="selection" width="55" align="center" />
+<!--          子表-->
           <el-table-column type="expand" prop="">
             <template slot-scope="scope">
               <el-table v-loading="loading" :data="scope.row.orderDetails" @selection-change="handleSelectionChange">
@@ -176,6 +177,13 @@
                   @click="handleUpdate(scope.row)"
                   v-hasPermi="['system:order:edit']"
               >修改</el-button>
+              <el-button
+                  size="mini"
+                  type="text"
+                  icon="el-icon-s-shop"
+                  @click="pay(scope.row)"
+                  v-show="scope.row.payState === 1"
+              >支付</el-button>
               <el-button
                   size="mini"
                   type="text"
@@ -236,6 +244,7 @@
 
 <script>
 import { listOrder, getOrder, delOrder, addOrder, updateOrder } from "@/api/system/order";
+import { pay } from "@/api/system/shop";
 import Header from "@/components/common/Header";
 import MyMenu from "@/components/common/Menu";
 import {Message, MessageBox} from "element-ui";
@@ -320,6 +329,10 @@ export default {
     this.getList();
   },
   methods: {
+    // 支付
+    pay(row) {
+      window.open("http://localhost:8081/shop/pay?orderCode=" + row.code)
+    },
     /** 查询订单主列表 */
     getList() {
       this.loading = true;

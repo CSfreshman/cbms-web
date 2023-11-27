@@ -80,57 +80,60 @@
           </el-row>
 
           <el-drawer
-              title="我的购物车"
+              title="购物车/订单"
               :visible.sync="drawer"
               :with-header="false">
-            <span>购物车</span>
-            <el-table :data="testData.projects" style="padding-top: 30px">
-              <el-table-column label="项目名称" align="center" prop="name" />
-              <el-table-column label="项目价格" align="center" prop="price" />
-              <el-table-column align="center" class-name="small-padding fixed-width">
-                <template slot-scope="scope">
-                  <el-button
-                      size="mini"
-                      type="text"
-                      icon="el-icon-minus"
-                      @click="handleRemove(scope.row)"
-                  ></el-button>
-                </template>
-              </el-table-column>
+            <div>
+              <span>购物车</span>
+              <el-table :data="testData.projects" style="padding-top: 30px">
+                <el-table-column label="项目名称" align="center" prop="name" />
+                <el-table-column label="项目价格" align="center" prop="price" />
+                <el-table-column align="center" class-name="small-padding fixed-width">
+                  <template slot-scope="scope">
+                    <el-button
+                        size="mini"
+                        type="text"
+                        icon="el-icon-minus"
+                        @click="handleRemove(scope.row)"
+                    ></el-button>
+                  </template>
+                </el-table-column>
 
-              <el-table-column label="项目数量" align="center" prop="num" />
+                <el-table-column label="项目数量" align="center" prop="num" />
 
-              <el-table-column align="center" class-name="small-padding fixed-width">
-                <template slot-scope="scope">
-                  <el-button
-                      size="mini"
-                      type="text"
-                      icon="el-icon-plus"
-                      @click="handlePlus(scope.row)"
-                  ></el-button>
-                </template>
-              </el-table-column>
-            </el-table>
+                <el-table-column align="center" class-name="small-padding fixed-width">
+                  <template slot-scope="scope">
+                    <el-button
+                        size="mini"
+                        type="text"
+                        icon="el-icon-plus"
+                        @click="handlePlus(scope.row)"
+                    ></el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
 
-            <el-row style="padding-top: 40px">
-              <span>合计: {{testData.totalPrice}} 元</span>
-            </el-row>
+              <el-row style="padding-top: 40px">
+                <span>合计: {{testData.totalPrice}} 元</span>
+              </el-row>
 
-            <el-input
-                v-model="carCard"
-                placeholder="请输入您的车牌号"
-                clearable
-                style="padding-top: 50px"
-            />
-            <el-input
-                v-model="phone"
-                placeholder="请输入您的手机号"
-                clearable
-                style="padding-top: 20px"
-            />
-            <el-row style="padding-top: 60px">
-              <el-button type="primary" @click="doOrder()">下单并支付</el-button>
-            </el-row>
+              <el-input
+                  v-model="carCard"
+                  placeholder="请输入您的车牌号"
+                  clearable
+                  style="padding-top: 50px"
+              />
+              <el-input
+                  v-model="phone"
+                  placeholder="请输入您的手机号"
+                  clearable
+                  style="padding-top: 20px"
+              />
+              <el-row style="padding-top: 60px">
+                <el-button type="primary" @click="doOrder()">下单并支付</el-button>
+              </el-row>
+            </div>
+
 
 
           </el-drawer>
@@ -234,30 +237,49 @@ export default {
       console.log("下单");
       // 需要参数：1.购物车数据 2.用户信息，包括车牌号、手机号
       doOrder(this.testData,this.carCard,this.phone).then(response => {
-        this.testData = "";
-        this.carCard = "";
-        this.phone = "";
+        if(response.code === 200){
+          this.testData = "";
+          this.carCard = "";
+          this.phone = "";
+          Message.success("下单成功，即将跳转至支付界面。")
 
-        Message.success("下单成功，即将跳转至支付界面。")
+          setTimeout(function() {
+            // 响应内容为order
+            window.location.href = "http://localhost:8081/shop/pay?orderCode=" + response.data.code;
+          }, 2500);
+
+        }
+
       });
     },
     handlePlus(row) {
-      row.num++;
-      this.testData.totalNum++;
-      this.testData.totalPrice+=row.price
 
-      updateNum(row.id,1)
+      updateNum(row.id,1).then(response=>{
+        row.num++;
+        this.testData.totalNum++;
+        this.testData.totalPrice+=row.price
+      })
+
+
+
+
     },
     handleRemove(row) {
       if(row.num <= 0){
         Message.info("不可以再扣减了")
         return;
       }
-      row.num--;
-      this.testData.totalNum--;
-      this.testData.totalPrice-=row.price
 
-      updateNum(row.id,-1)
+      updateNum(row.id,-1).then(response=>{
+        row.num--;
+        this.testData.totalNum--;
+        this.testData.totalPrice-=row.price
+      })
+
+
+
+
+
     },
     handleAddToCart(row) {
       addToCart(row).then(response=>{

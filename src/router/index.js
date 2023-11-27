@@ -128,6 +128,12 @@ const routes = [
     name: '下单',
     hidden: true,
     component: () => import('@/components/views/system/shop/index')
+  },
+  {
+    path: '/pay',
+    name: '支付',
+    hidden: true,
+    component: () => import('@/components/views/system/shop/pay')
   }
 
 
