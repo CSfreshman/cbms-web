@@ -158,10 +158,18 @@
           </el-table-column>
 <!--          <el-table-column label="主键" align="center" prop="id" />-->
           <el-table-column label="订单号" align="center" prop="code" />
-          <el-table-column label="支付类型" align="center" prop="payType" />
+          <el-table-column label="支付类型" align="center" prop="payType">
+            <template slot-scope="scope">
+              {{getPayType(scope.row.payType)}}
+            </template>
+          </el-table-column>
           <el-table-column label="支付订单号" align="center" prop="payCode" />
-          <el-table-column label="订单状态" align="center" prop="payState" />
-          <el-table-column label="用户" align="center" prop="userId" />
+          <el-table-column label="订单状态" align="center" prop="payState">
+            <template slot-scope="scope">
+              {{getOrderState(scope.row.payState)}}
+            </template>
+          </el-table-column>
+          <el-table-column label="用户" align="center" prop="userName" />
           <el-table-column label="联系电话" align="center" prop="phone" width="110px"/>
           <el-table-column label="车牌号" align="center" prop="carCode" />
           <el-table-column label="订单总价格" align="center" prop="totalPrice" />
@@ -182,7 +190,7 @@
                   type="text"
                   icon="el-icon-s-shop"
                   @click="pay(scope.row)"
-                  v-show="scope.row.payState === 1"
+                  v-show="scope.row.payState === 1 || scope.row.payState === 4"
               >支付</el-button>
               <el-button
                   size="mini"
@@ -253,6 +261,8 @@ export default {
   components: {MyMenu, Header},
   data() {
     return {
+      // 订单状态列表
+      orderStateList: ["空状态","待支付","支付中","支付完成","已取消","已完成"],
       // 遮罩层
       loading: true,
       // 选中数组
@@ -329,6 +339,16 @@ export default {
     this.getList();
   },
   methods: {
+    // 获得订单状态
+    getOrderState(orderState) {
+      return this.orderStateList[orderState]
+    },
+    // 获得支付类型
+    getPayType(payType) {
+      if(payType === 1){
+        return "支付宝"
+      }
+    },
     // 支付
     pay(row) {
       window.open("http://localhost:8081/shop/pay?orderCode=" + row.code)

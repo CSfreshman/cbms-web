@@ -1,5 +1,12 @@
 import request from '@/utils/request'
 
+export function cleanCart() {
+  return request({
+    url: '/shop/cleanCart',
+    method: 'post'
+  })
+}
+
 export function pay(orderCode) {
   return request({
     url: '/shop/pay?orderCode=' + orderCode,

@@ -77,6 +77,9 @@
             <el-button @click="drawer = true" type="primary" style="margin-left: 16px;">
               查看购物车
             </el-button>
+            <el-button @click="cleanCart()" type="primary" style="margin-left: 16px;">
+              清空购物车
+            </el-button>
           </el-row>
 
           <el-drawer
@@ -165,7 +168,7 @@
 
 
 <script>
-import { listProject, getProject, delProject, addProject, updateProject, addToCart, doOrder, getAll, updateNum} from "@/api/system/shop";
+import { listProject, getProject, delProject, addProject, updateProject, addToCart, doOrder, getAll, updateNum,cleanCart} from "@/api/system/shop";
 import Header from "@/components/common/Header";
 import MyMenu from "@/components/common/Menu";
 import {Message, MessageBox} from "element-ui";
@@ -233,6 +236,15 @@ export default {
     this.getShopCart();
   },
   methods: {
+    cleanCart() {
+      cleanCart().then(response => {
+        if(response.code === 200){
+          this.testData.totalNum=0;
+          this.testData.totalPrice=0;
+          this.testData.projects = '';
+        }
+      })
+    },
     doOrder() {
       console.log("下单");
       // 需要参数：1.购物车数据 2.用户信息，包括车牌号、手机号
