@@ -9,6 +9,24 @@ export function listOrder(query) {
   })
 }
 
+// 查询子单明细
+export function getOrderDetail(id) {
+  return request({
+    url: '/cbmsOrderDetail/' + id,
+    method: 'get'
+  })
+}
+
+// 修改订单子
+export function updateOrderDetail(data) {
+  return request({
+    url: '/cbmsOrderDetail',
+    method: 'put',
+    data: data
+  })
+}
+
+
 // 查询订单主详细
 export function getOrder(id) {
   return request({

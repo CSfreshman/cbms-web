@@ -63,7 +63,7 @@
             </el-table-column>
           </el-table>
 
-          <pagination
+          <MyPagination
               v-show="total>0"
               :total="total"
               :page.sync="queryParams.pageNum"
@@ -174,10 +174,11 @@ import MyMenu from "@/components/common/Menu";
 import {Message, MessageBox} from "element-ui";
 
 import data from "@/components/views/system/shop/test.json"
+import MyPagination from "@/components/common/Pagination";
 
 export default {
   name: "Shop",
-  components: {Header, MyMenu},
+  components: {MyPagination, Header, MyMenu},
   data() {
     return {
       // 车牌号

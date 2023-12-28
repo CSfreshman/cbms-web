@@ -2,7 +2,7 @@
   <div class="login">
     <el-card class="box-card">
       <div slot="header" class="el-card__header">
-        <span>毕业设计管理系统</span>
+        <span>汽车美容管理系统</span>
       </div>
       <el-form :model="form" ref="form" label-width="80px">
         <el-form-item label="用户名" prop="username"
@@ -32,17 +32,17 @@
         ]">
           <el-input type="password" v-model="form.password" ></el-input>
         </el-form-item>
-        <el-form-item label="登录角色" :label-width="formLabelWidth">
-          <el-select v-model="form.role" placeholder="请选择">
-            <el-option
-                v-for="item in roles"
-                :key="item.id"
-                :label="item.value"
-                :value="item.id"
-            >
-            </el-option>
-          </el-select>
-        </el-form-item>
+<!--        <el-form-item label="登录角色" :label-width="formLabelWidth">-->
+<!--          <el-select v-model="form.role" placeholder="请选择">-->
+<!--            <el-option-->
+<!--                v-for="item in roles"-->
+<!--                :key="item.id"-->
+<!--                :label="item.value"-->
+<!--                :value="item.id"-->
+<!--            >-->
+<!--            </el-option>-->
+<!--          </el-select>-->
+<!--        </el-form-item>-->
         <el-form-item>
           <el-button type="primary" @click="login">登录</el-button>
         </el-form-item>

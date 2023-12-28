@@ -22,6 +22,7 @@
                 @keyup.enter.native="handleQuery"
             />
           </el-form-item>
+<!--          订单状态（1.待支付，2.支付中，3.支付完成，4.已取消，5.已完成）-->
           <el-form-item label="订单状态" prop="payState">
             <el-input
                 v-model="queryParams.payState"
@@ -46,22 +47,22 @@
                 @keyup.enter.native="handleQuery"
             />
           </el-form-item>
-          <el-form-item label="订单总价格" prop="totalPrice">
-            <el-input
-                v-model="queryParams.totalPrice"
-                placeholder="请输入订单总价格"
-                clearable
-                @keyup.enter.native="handleQuery"
-            />
-          </el-form-item>
-          <el-form-item label="订单实际价格" prop="realPrice">
-            <el-input
-                v-model="queryParams.realPrice"
-                placeholder="请输入订单实际价格"
-                clearable
-                @keyup.enter.native="handleQuery"
-            />
-          </el-form-item>
+<!--          <el-form-item label="订单总价格" prop="totalPrice">-->
+<!--            <el-input-->
+<!--                v-model="queryParams.totalPrice"-->
+<!--                placeholder="请输入订单总价格"-->
+<!--                clearable-->
+<!--                @keyup.enter.native="handleQuery"-->
+<!--            />-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="订单实际价格" prop="realPrice">-->
+<!--            <el-input-->
+<!--                v-model="queryParams.realPrice"-->
+<!--                placeholder="请输入订单实际价格"-->
+<!--                clearable-->
+<!--                @keyup.enter.native="handleQuery"-->
+<!--            />-->
+<!--          </el-form-item>-->
 <!--          <el-form-item label="用户id" prop="userId">-->
 <!--            <el-input-->
 <!--                v-model="queryParams.userId"-->
@@ -128,31 +129,31 @@
           <el-table-column type="expand" prop="">
             <template slot-scope="scope">
               <el-table v-loading="loading" :data="scope.row.orderDetails" @selection-change="handleSelectionChange">
-                <el-table-column type="selection" width="55" align="center" />
+<!--                <el-table-column type="selection" width="55" align="center" />-->
 <!--                <el-table-column label=" 主键" align="center" prop="id" />-->
                 <el-table-column label="主表订单号" align="center" prop="orderCode" />
                 <el-table-column label="项目" align="center" prop="projectName" />
                 <el-table-column label="数量" align="center" prop="count" />
                 <el-table-column label="价格" align="center" prop="price" />
                 <el-table-column label="实际价格" align="center" prop="realPrice" />
-                <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-                  <template slot-scope="scope">
-                    <el-button
-                        size="mini"
-                        type="text"
-                        icon="el-icon-edit"
-                        @click="handleUpdate(scope.row)"
-                        v-hasPermi="['system:detail:edit']"
-                    >修改</el-button>
-                    <el-button
-                        size="mini"
-                        type="text"
-                        icon="el-icon-delete"
-                        @click="handleDelete(scope.row)"
-                        v-hasPermi="['system:detail:remove']"
-                    >删除</el-button>
-                  </template>
-                </el-table-column>
+<!--                <el-table-column label="操作" align="center" class-name="small-padding fixed-width">-->
+<!--                  <template slot-scope="scope">-->
+<!--                    <el-button-->
+<!--                        size="mini"-->
+<!--                        type="text"-->
+<!--                        icon="el-icon-edit"-->
+<!--                        @click="handleUpdateDetail(scope.row)"-->
+<!--                        v-hasPermi="['system:detail:edit']"-->
+<!--                    >修改</el-button>-->
+<!--                    <el-button-->
+<!--                        size="mini"-->
+<!--                        type="text"-->
+<!--                        icon="el-icon-delete"-->
+<!--                        @click="handleDeleteDetail(scope.row)"-->
+<!--                        v-hasPermi="['system:detail:remove']"-->
+<!--                    >删除</el-button>-->
+<!--                  </template>-->
+<!--                </el-table-column>-->
               </el-table>
             </template>
           </el-table-column>
@@ -203,13 +204,14 @@
           </el-table-column>
         </el-table>
 
-        <pagination
-            v-show="total>0"
-            :total="total"
-            :page.sync="queryParams.pageNum"
-            :limit.sync="queryParams.pageSize"
-            @pagination="getList"
-        />
+
+          <MyPagination
+              v-show="total>0"
+              :total="total"
+              :page.sync="queryParams.pageNum"
+              :limit.sync="queryParams.pageSize"
+              @pagination="getList"
+          />
 
         <!-- 添加或修改订单主对话框 -->
         <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
@@ -251,14 +253,15 @@
 </template>
 
 <script>
-import { listOrder, getOrder, delOrder, addOrder, updateOrder } from "@/api/system/order";
-import { pay } from "@/api/system/shop";
+import { listOrder, getOrder, delOrder, addOrder, updateOrder, getOrderDetail, updateOrderDetail} from "@/api/system/order";
 import Header from "@/components/common/Header";
 import MyMenu from "@/components/common/Menu";
 import {Message, MessageBox} from "element-ui";
+import MyPagination from "@/components/common/Pagination";
+
 export default {
   name: "Order",
-  components: {MyMenu, Header},
+  components: {MyPagination, MyMenu, Header},
   data() {
     return {
       // 订单状态列表
@@ -300,37 +303,37 @@ export default {
       // 表单校验
       rules: {
         code: [
-          { required: true, message: "订单号不能为空", trigger: "blur" }
+          { required: false, message: "订单号不能为空", trigger: "blur" }
         ],
         payType: [
-          { required: true, message: "支付类型不能为空", trigger: "change" }
+          { required: false, message: "支付类型不能为空", trigger: "change" }
         ],
         payCode: [
-          { required: true, message: "支付订单号不能为空", trigger: "blur" }
+          { required: false, message: "支付订单号不能为空", trigger: "blur" }
         ],
         payState: [
-          { required: true, message: "订单状态不能为空", trigger: "blur" }
+          { required: false, message: "订单状态不能为空", trigger: "blur" }
         ],
         phone: [
-          { required: true, message: "联系电话不能为空", trigger: "blur" }
+          { required: false, message: "联系电话不能为空", trigger: "blur" }
         ],
         carCode: [
-          { required: true, message: "车牌号不能为空", trigger: "blur" }
+          { required: false, message: "车牌号不能为空", trigger: "blur" }
         ],
         createTime: [
-          { required: true, message: "创建时间不能为空", trigger: "blur" }
+          { required: false, message: "创建时间不能为空", trigger: "blur" }
         ],
         updateTime: [
-          { required: true, message: "修改时间不能为空", trigger: "blur" }
+          { required: false, message: "修改时间不能为空", trigger: "blur" }
         ],
         totalPrice: [
-          { required: true, message: "订单总价格不能为空", trigger: "blur" }
+          { required: false, message: "订单总价格不能为空", trigger: "blur" }
         ],
         realPrice: [
-          { required: true, message: "订单实际价格不能为空", trigger: "blur" }
+          { required: false, message: "订单实际价格不能为空", trigger: "blur" }
         ],
         userId: [
-          { required: true, message: "用户id不能为空", trigger: "blur" }
+          { required: false, message: "用户id不能为空", trigger: "blur" }
         ]
       }
     };
@@ -339,6 +342,26 @@ export default {
     this.getList();
   },
   methods: {
+    /** 修改按钮操作 */
+    handleUpdateDetail(row) {
+      this.reset();
+      const id = row.id || this.ids
+      getOrderDetail(id).then(response => {
+        this.form = response.data;
+        this.open = true;
+        this.title = "修改订单子";
+      });
+    },
+    handleDeleteDetail(row){
+      const ids = row.id || this.ids;
+      this.$modal.confirm('是否确认删除子订单编号为"' + ids + '"的数据项？').then(function() {
+        return delOrder(ids);
+      }).then(() => {
+        this.getList();
+        Message.success("删除成功");
+      }).catch(() => {});
+    },
+
     // 获得订单状态
     getOrderState(orderState) {
       return this.orderStateList[orderState]
@@ -440,12 +463,20 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除订单主编号为"' + ids + '"的数据项？').then(function() {
+
+      MessageBox.confirm('是否确认删除订单主编号为"' + ids + '"的数据项？', "系统提示", {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: "warning",
+      })
+      .then(function() {
         return delOrder(ids);
-      }).then(() => {
+      })
+      .then(() => {
         this.getList();
         Message.success("删除成功");
       }).catch(() => {});
+
     },
     /** 导出按钮操作 */
     handleExport() {

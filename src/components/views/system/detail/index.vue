@@ -121,7 +121,7 @@
       </el-table-column>
     </el-table>
 
-    <pagination
+    <MyPagination
       v-show="total>0"
       :total="total"
       :page.sync="queryParams.pageNum"
@@ -158,9 +158,11 @@
 
 <script>
 import { listDetail, getDetail, delDetail, addDetail, updateDetail } from "@/api/system/detail";
+import MyPagination from "@/components/common/Pagination";
 
 export default {
   name: "Detail",
+  components: {MyPagination},
   data() {
     return {
       // 遮罩层

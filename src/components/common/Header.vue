@@ -1,7 +1,7 @@
 <template>
   <div class="header">
     <el-header>
-      <div class="title">毕业设计管理系统</div>
+      <div class="title">汽车美容管理系统</div>
     </el-header>
   </div>
 </template>

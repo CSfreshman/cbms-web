@@ -99,7 +99,7 @@
             </el-table-column>
           </el-table>
 
-          <pagination
+          <MyPagination
               v-show="total>0"
               :total="total"
               :page.sync="queryParams.pageNum"
@@ -134,10 +134,11 @@ import { listUser, getUser, delUser, addUser, updateUser } from "@/api/system/us
 import Header from "@/components/common/Header";
 import MyMenu from "@/components/common/Menu";
 import {Message, MessageBox} from "element-ui";
+import MyPagination from "@/components/common/Pagination";
 
 export default {
   name: "User",
-  components: {MyMenu, Header},
+  components: {MyPagination, MyMenu, Header},
   data() {
     return {
       // 遮罩层
